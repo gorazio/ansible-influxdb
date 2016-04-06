@@ -1,19 +1,19 @@
 ---
 
-- name: Create influxdb group
-  group:
-    name: "{{influxdb_group}}"
-    state: present
-  tags:
-    - influxdb
-
-- name: Create influxdb user
-  user:
-    name: "{{influxdb_user}}"
-    group: "{{influxdb_group}}"
-    state: present
-  tags:
-    - influxdb
+# - name: Create influxdb group
+#   group:
+#     name: "{{influxdb_group}}"
+#     state: present
+#   tags:
+#     - influxdb
+#
+# - name: Create influxdb user
+#   user:
+#     name: "{{influxdb_user}}"
+#     group: "{{influxdb_group}}"
+#     state: present
+#   tags:
+#     - influxdb
 
 - name: Download version
   get_url:
@@ -77,7 +77,7 @@
 
 - name: Write config
   template:
-    src: conf.j2
+    src: "conf{{influxdb_conf_ver}}.j2"
     dest: "{{influxdb_config_file}}"
     group: "{{influxdb_group}}"
     owner: "{{influxdb_user}}"

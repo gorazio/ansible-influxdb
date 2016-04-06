@@ -2,9 +2,9 @@
 
 - name: Test influxdb
   hosts: all
-  sudo: yes
+  become: yes
   vars_files:
-    - "vars/main.yml"
+    - "defaults/main.yml"
   tasks:
     - include: "tasks/main.yml"
   handlers:

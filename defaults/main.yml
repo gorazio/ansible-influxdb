@@ -1,10 +1,10 @@
 ---
 influxdb_ver: "0.9.6"
+influxdb_conf_ver: "9"
 influxdb_arch: "amd64"
 influxdb_dl_url: "http://influxdb.s3.amazonaws.com/influxdb_{{ influxdb_ver }}_{{ influxdb_arch }}.deb"
 influxdb_pkg: "/usr/local/src/influxdb_{{ influxdb_ver }}_{{ influxdb_arch }}.deb"
 influxdb_maxprocs: "{{ansible_processor_vcpus}}"
-influxdb_hostname: "{{ansible_default_ipv4.address}}"
 influxdb_keep_initd: false
 influxdb_user: "influxdb"
 influxdb_group: "influxdb"
@@ -21,9 +21,13 @@ influxdb_reporting_disabled: "false"
 
 # [meta]
 influxdb_meta_dir: "/var/lib/influxdb/meta"
-influxdb_hostname: "localhost"
-influxdb_bind_address: ":8088"
 influxdb_retention_autocreate: "true"
+influxdb_logging_enabled: "true"
+influxdb_pprof_enabled: "false"
+influxdb_lease_duration: "1m0s"
+influxdb_hostname: "localhost"
+# deprecated
+influxdb_bind_address: ":8088"
 influxdb_election_timeout: "1s"
 influxdb_heartbeat_timeout: "1s"
 influxdb_leader_lease_timeout: "500ms"
@@ -31,15 +35,25 @@ influxdb_commit_timeout: "50ms"
 influxdb_cluster_tracing: "false"
 influx_raft_promotion_enabled: "true"
 
+
 # [data]
 
 influxdb_data_dir: "/var/lib/influxdb/data"
+influxdb_wal_dir: "/var/lib/influxdb/wal"
+influxdb_wal_enable_logging: "true"
+influxdb_data_logging_enable: "true"
+influxdb_query_log_enabled: "false"
+influxdb_cache_max_memory_size: 524288000
+influxdb_cache_snapshot_memory_size: 26214400
+influxdb_cache_snapshot_write_cold_duration: "1h"
+influxdb_compact_min_file_count: 3
+influxdb_compact_full_write_cold_duration: "24h"
+influxdb_max_points_per_block: 1000
+# deprecated
 influxdb_data_engine: "tsm1"
 influxdb_max_wal_size: 104857600
 influxdb_wal_flush_interval: "10m"
 influxdb_wal_partition_flush_delay: "2s"
-influxdb_wal_dir: "/var/lib/influxdb/wal"
-influxdb_wal_enable_logging: "true"
 influxdb_wal_ready_series_size: 25600
 influxdb_wal_compaction_threshold: 0.6
 influxdb_wal_max_series_size: 2097152
@@ -51,14 +65,9 @@ influxdb_index_compaction_age: 60000000000
 influxdb_index_min_compaction_interval: 60000000000
 influxdb_index_compaction_min_file_count: 5
 influxdb_index_compaction_full_age: 300000000000
-influxdb_query_log_enabled: "false"
-influxdb_cache_max_memory_size: 524288000
-influxdb_cache_snapshot_memory_size: 26214400
-influxdb_cache_snapshot_write_cold_duration: "1h"
-influxdb_compact_min_file_count: 3
-influxdb_compact_full_write_cold_duration: "24h"
-influxdb_max_points_per_block: 1000
 
+
+# deprecated
 # [hinted-handoff]
 influxdb_hh_enabled: "true"
 influxdb_hh_dir: "/var/lib/influxdb/hh"
@@ -72,6 +81,11 @@ influxdb_hh_purge_interval: "1h"
 # [cluster]
 influxdb_cluster_shard_writer_timeout: "5s"
 influxdb_cluster_write_timeout: "5s"
+influxdb_max_concurrent_queries: 0
+influxdb_query_timeout: "0s"
+influxdb_max_select_point: 0
+influxdb_max_select_series: 0
+influxdb_max_select_buckets: 0
 
 # [retention]
 influxdb_retention_enabled: "true"
@@ -102,6 +116,7 @@ influxdb_http_write_tracing: "false"
 influxdb_http_pprof_enabled: "false"
 influxdb_http_https_enabled: "false"
 influxdb_http_https_certificate: "/etc/ssl/influxdb.pem"
+influx_http_max_row_limit: 10000
 
 # [[graphite]]
 influxdb_graphite_enabled: "false"
@@ -110,8 +125,8 @@ influxdb_graphite_bind_address: ":2003"
 influxdb_graphite_protocol: "tcp"
 influxdb_graphite_consistency_level: "one"
 influxdb_graphite_name_separator: "."
-influxdb_graphite_batch_size: 1000
-influxdb_graphite_batch_pending: 5
+influxdb_graphite_batch_size: 5000
+influxdb_graphite_batch_pending: 10
 influxdb_graphite_batch_timeout: "1s"
 influxdb_graphite_udp_read_buffer: 0
 influxdb_graphite_name_schema: "type.host.measurement.device"
@@ -148,11 +163,14 @@ influxdb_udp_retention_policy: ""
 influxdb_udp_batch_size: 1000
 influxdb_udp_batch_pending: 5
 influxdb_udp_batch_timeout: "1s"
-influxdb_udp_read_buffer: 0 
+influxdb_udp_read_buffer: 0
+influx_udp_udp_payload_size: 65536
 
 # [continuous_queries]
 influxdb_cqueries_log_enabled: "true"
 influxdb_cqueries_enabled: "true"
+influxdb_cqueries_run_interval: "1s"
+# deprecated
 influxdb_cqueries_recompute_previous_n: 2
 influxdb_cqueries_recompute_no_older_than: "10m"
 influxdb_cqueries_compute_runs_per_interval: 10
